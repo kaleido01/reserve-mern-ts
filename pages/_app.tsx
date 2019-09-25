@@ -1,16 +1,13 @@
-import App from 'next/app'
+import App, { AppContext } from 'next/app'
 import React from 'react'
 import Layout from '../components/_App/Layout'
 
-interface Props {
-  Component: any
-}
-class MyApp extends App<Props> {
-  public static async getInitialProps(ctx: any) {
+class MyApp extends App {
+  public static async getInitialProps({ Component, ctx }: AppContext) {
     let pageProps = {}
 
-    if (ctx.Component.getInitialProps) {
-      pageProps = await ctx.Component.getInitialProps(ctx)
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
     }
 
     return { pageProps }
