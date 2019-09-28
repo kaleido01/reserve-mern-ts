@@ -6,7 +6,7 @@ export interface ProductType extends mongoose.Document {
   price: number
   sku: string
   description: string
-  media: string
+  mediaUrl: string
 }
 const ProductShema = new mongoose.Schema<ProductType>({
   name: {

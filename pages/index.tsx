@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios'
+import ProductList from '../components/Index/ProductList'
+import { ProductType } from '../models/Product'
 
 type Product = {
   name: string
@@ -9,7 +11,7 @@ type Product = {
   mediaUrl: string
 }
 type Props = {
-  products: Product[]
+  products: ProductType[]
 }
 
 function Home(props: Props) {
@@ -22,8 +24,7 @@ function Home(props: Props) {
   //   getProducts()
   // }, [])
 
-  console.log(products)
-  return <div>aaa</div>
+  return <ProductList products={products} />
 }
 
 Home.getInitialProps = async () => {
