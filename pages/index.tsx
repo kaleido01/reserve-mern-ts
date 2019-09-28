@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import ProductList from '../components/Index/ProductList'
 import { ProductType } from '../models/Product'
+import baseUrl from '../utils/baseUrl'
 
 type Product = {
   name: string
@@ -28,7 +29,7 @@ function Home(props: Props) {
 }
 
 Home.getInitialProps = async () => {
-  const url = 'http://localhost:3000/api/products'
+  const url = `${baseUrl}/api/products`
   const response = await axios.get(url)
   return { products: response.data as Product[] }
 }
