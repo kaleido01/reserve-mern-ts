@@ -1,7 +1,7 @@
 import App, { AppContext } from 'next/app'
 import React from 'react'
 import Layout from '../components/_App/Layout'
-import { parseCookies } from 'nookies'
+import { parseCookies, destroyCookie } from 'nookies'
 import { redirectUser } from '../utils/auth'
 import baseUrl from '../utils/baseUrl'
 import axios, { AxiosRequestConfig } from 'axios'
@@ -17,7 +17,7 @@ class MyApp extends App {
     let pageProps: PageProps = {}
 
     if (!token) {
-      const isProtectedRoute = ctx.pathname === '/account' || '/create'
+      const isProtectedRoute = ctx.pathname === '/account' || ctx.pathname === '/create'
       if (isProtectedRoute) {
         redirectUser(ctx, '/login')
       }
@@ -28,7 +28,8 @@ class MyApp extends App {
         const response = await axios.get(url, payload)
         pageProps.user = response.data
       } catch (error) {
-        console.log({ error })
+        destroyCookie(ctx, 'token')
+        redirectUser(ctx, '/login')
       }
     }
 
