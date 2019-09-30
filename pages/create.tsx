@@ -1,6 +1,8 @@
 import React from 'react'
 import { Header, Icon, Form, Input, Button, TextArea, Image, Message } from 'semantic-ui-react'
 import { useFormik } from 'formik'
+import axios from 'axios'
+import baseUrl from '../utils/baseUrl'
 
 type payload = {
   name: string
@@ -15,24 +17,47 @@ const CreateProduct = () => {
     media: undefined,
     description: '',
   }
+
   const [mediaPreview, setMediaPreview] = React.useState('')
   const [success, setSuccess] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
   const { values, setFieldValue, submitForm, setValues } = useFormik({
     initialValues,
-    onSubmit: values => {
-      console.log(values)
+    onSubmit: async values => {
+      setLoading(true)
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      const mediaUrl = await handleImageUpload()
+      console.log({ mediaUrl })
+
+      const url = `${baseUrl}/api/product`
+      const { name, price, description } = values
+      const response = await axios.post(url, { name, price, description, mediaUrl })
+      console.log({ response })
       setSuccess(true)
+      setLoading(false)
+
       setValues(initialValues)
     },
   })
   console.log(values)
+  const handleImageUpload = async () => {
+    const data = new FormData()
+    data.append('file', values.media)
+    data.append('upload_preset', 'reactreserve')
+    data.append('cloud_name', 'da9s05mht')
+
+    const response = await axios.post(process.env.CLOUDINARY_URL, data)
+    const mediaUrl: string = response.data.url
+    return mediaUrl
+  }
+
   return (
     <div>
       <Header as="h2" block>
         <Icon name="add" color="orange" />
         Create New Product
       </Header>
-      <Form success={success} onSubmit={submitForm}>
+      <Form success={success} onSubmit={submitForm} loading={loading}>
         <Message success icon="check" header="Success!" content="Your product has been posted" />
         <Form.Group widths="equal">
           <Form.Field
@@ -78,6 +103,7 @@ const CreateProduct = () => {
         />
         <Form.Field
           control={Button}
+          disabled={loading}
           color="blue"
           icon="pencil alternate"
           content="Submit"

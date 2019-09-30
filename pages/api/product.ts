@@ -14,6 +14,21 @@ const handleDeleteRequest = async (req: NextApiRequest, res: NextApiResponse) =>
   await Product.deleteOne({ _id })
   res.status(204).json({})
 }
+const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { name, price, description, mediaUrl } = req.body
+  if (!name || !price || !description || !mediaUrl) {
+    return res.status(422).send('Priduct missing one or more fields')
+  }
+  const newProduct = new Product({
+    name,
+    price,
+    description,
+    mediaUrl,
+  })
+  await newProduct.save()
+
+  res.status(201).json(newProduct)
+}
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -23,7 +38,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'DELETE':
       await handleDeleteRequest(req, res)
       break
-
+    case 'POST':
+      await handlePostRequest(req, res)
+      break
     default:
       res.status(405).send(`Method ${req.method} not allowed`)
       break
