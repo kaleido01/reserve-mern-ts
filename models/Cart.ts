@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import { ObjectId } from 'mongodb'
 import { UserType } from './User'
 import { ProductType } from './Product'
 
@@ -12,9 +11,9 @@ export interface CartType extends mongoose.Document {
   user: UserType
   products: Product[]
 }
-const ProductShema = new mongoose.Schema<CartType>({
+const CartSchema = new mongoose.Schema<CartType>({
   user: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
   products: [
@@ -24,7 +23,7 @@ const ProductShema = new mongoose.Schema<CartType>({
         default: 1,
       },
       product: {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
       },
     },
@@ -32,4 +31,4 @@ const ProductShema = new mongoose.Schema<CartType>({
 })
 
 export default (mongoose.models.Cart as mongoose.Model<CartType, {}>) ||
-  mongoose.model<CartType>('Cart', ProductShema)
+  mongoose.model<CartType>('Cart', CartSchema)
