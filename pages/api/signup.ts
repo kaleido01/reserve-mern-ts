@@ -5,6 +5,7 @@ import User from '../../models/User'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { isEmail, isLength } from 'validator'
+import Cart from '../../models/Cart'
 connectDb()
 
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -35,6 +36,12 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       email,
     })
     await newUser.save()
+    const newCart = new Cart({
+      user: newUser._id,
+    })
+
+    newCart.save()
+
     console.log(newUser)
 
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
