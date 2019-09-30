@@ -5,6 +5,7 @@ import { useFormik } from 'formik'
 import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import catchErrors from '../utils/catchErrors'
+import handleLogin from '../utils/auth'
 
 type payload = {
   name: string
@@ -30,8 +31,10 @@ const Signup = () => {
     initialValues,
     onSubmit: async values => {
       try {
-        const url = `${baseUrl}/api/product`
-        await axios.post(url, values)
+        const url = `${baseUrl}/api/signup`
+        console.log(values)
+        const response = await axios.post(url, { ...values })
+        handleLogin(response.data)
         setSuccess(true)
         setValues(initialValues)
       } catch (error) {

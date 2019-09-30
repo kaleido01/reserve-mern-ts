@@ -27,8 +27,8 @@ const Login = () => {
     initialValues,
     onSubmit: async values => {
       try {
-        const url = `${baseUrl}/api/product`
-        await axios.post(url, values)
+        const url = `${baseUrl}/api/login`
+        await axios.post(url, { ...values })
         setSuccess(true)
         setValues(initialValues)
       } catch (error) {
