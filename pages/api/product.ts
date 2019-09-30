@@ -25,7 +25,11 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     description,
     mediaUrl,
   })
-  await newProduct.save()
+  try {
+    await newProduct.save()
+  } catch (error) {
+    res.status(500).send('server error occured')
+  }
 
   res.status(201).json(newProduct)
 }

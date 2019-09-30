@@ -3,12 +3,20 @@ import { Header, Icon, Form, Input, Button, TextArea, Image, Message } from 'sem
 import { useFormik } from 'formik'
 import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
+import catchErrors from '../utils/catchErrors'
 
 type payload = {
   name: string
   price: number
   media: File
   description: string
+}
+
+type FormError = {
+  name?: string
+  price?: number
+  media?: File
+  description?: string
 }
 const CreateProduct = () => {
   const initialValues: payload = {
@@ -20,26 +28,40 @@ const CreateProduct = () => {
 
   const [mediaPreview, setMediaPreview] = React.useState('')
   const [success, setSuccess] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
-  const { values, setFieldValue, submitForm, setValues } = useFormik({
+  const [serverError, setServerError] = React.useState('')
+  const {
+    values,
+    setFieldValue,
+    submitForm,
+    setValues,
+    isSubmitting,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+  } = useFormik({
     initialValues,
     onSubmit: async values => {
-      setLoading(true)
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      const mediaUrl = await handleImageUpload()
-      console.log({ mediaUrl })
-
-      const url = `${baseUrl}/api/product`
-      const { name, price, description } = values
-      const response = await axios.post(url, { name, price, description, mediaUrl })
-      console.log({ response })
-      setSuccess(true)
-      setLoading(false)
-
-      setValues(initialValues)
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        const mediaUrl = await handleImageUpload()
+        const url = `${baseUrl}/api/product`
+        const { name, price, description } = values
+        await axios.post(url, { name, price, description, mediaUrl })
+        setSuccess(true)
+        setValues(initialValues)
+      } catch (error) {
+        setServerError(catchErrors(error))
+      }
+    },
+    validate: values => {
+      const errors: FormError = {}
+      if (!values.name) {
+        errors.name = 'aaaaaa'
+      }
+      return errors
     },
   })
-  console.log(values)
   const handleImageUpload = async () => {
     const data = new FormData()
     data.append('file', values.media)
@@ -50,23 +72,31 @@ const CreateProduct = () => {
     const mediaUrl: string = response.data.url
     return mediaUrl
   }
-
+  console.log({ errors, touched })
   return (
     <div>
       <Header as="h2" block>
         <Icon name="add" color="orange" />
         Create New Product
       </Header>
-      <Form success={success} onSubmit={submitForm} loading={loading}>
+      <Form
+        success={success}
+        onSubmit={submitForm}
+        loading={isSubmitting}
+        error={Boolean(serverError)}
+      >
         <Message success icon="check" header="Success!" content="Your product has been posted" />
+        <Message error header="Ooops!" content={serverError} />
         <Form.Group widths="equal">
           <Form.Field
             control={Input}
             name="name"
             label="Name"
             placeholder="Name"
-            onChange={e => setFieldValue('name', e.target.value)}
+            onBlur={handleBlur}
+            onChange={handleChange}
             value={values.name}
+            error={errors.name}
           />
           <Form.Field
             control={Input}
@@ -74,13 +104,13 @@ const CreateProduct = () => {
             label="Price"
             placeholder="Price"
             type="number"
-            onChange={e => setFieldValue('price', e.target.value)}
+            onChange={handleChange}
             value={values.price}
             step={0.01}
           />
           <Form.Field
             control={Input}
-            name="medea"
+            name="media"
             label="Media"
             placeholder="Price"
             type="file"
@@ -98,12 +128,12 @@ const CreateProduct = () => {
           name="description"
           label="Description"
           placeholder="Description"
-          onChange={e => setFieldValue('description', e.target.value)}
+          onChange={handleChange}
           value={values.description}
         />
         <Form.Field
           control={Button}
-          disabled={loading}
+          disabled={isSubmitting}
           color="blue"
           icon="pencil alternate"
           content="Submit"
