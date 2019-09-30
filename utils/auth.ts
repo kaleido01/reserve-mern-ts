@@ -15,3 +15,9 @@ export const redirectUser = (ctx: NextPageContext, location: string) => {
     Router.push(location)
   }
 }
+
+export const handleLogut = () => {
+  cookie.remove('token')
+  window.localStorage.setItem('logout', String(Date.now()))
+  Router.push('/login')
+}

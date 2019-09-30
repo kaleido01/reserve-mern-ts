@@ -4,12 +4,13 @@ import Router, { useRouter } from 'next/router'
 import { Menu, Container, Image, Icon } from 'semantic-ui-react'
 import NProgress from 'nprogress'
 import { PageProps } from '../../pages/_app'
+import { handleLogut } from '../../utils/auth'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
-const Header = ({ user }: PageProps) => {
+const Header = ({ user, isRootOrAdmin }: PageProps) => {
   const router = useRouter()
   const isActive = (route: string) => {
     return route === router.pathname
@@ -29,7 +30,7 @@ const Header = ({ user }: PageProps) => {
             Cart
           </Menu.Item>
         </Link>
-        {user && (
+        {isRootOrAdmin && (
           <Link href="/create">
             <Menu.Item header active={isActive('/create')}>
               <Icon size="large" name="add square" />
@@ -47,7 +48,7 @@ const Header = ({ user }: PageProps) => {
               </Menu.Item>
             </Link>
 
-            <Menu.Item header>
+            <Menu.Item header onClick={handleLogut}>
               <Icon size="large" name="sign out" />
               Logout
             </Menu.Item>

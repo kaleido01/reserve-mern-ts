@@ -6,10 +6,12 @@ import { redirectUser } from '../utils/auth'
 import baseUrl from '../utils/baseUrl'
 import axios, { AxiosRequestConfig } from 'axios'
 import { UserType } from '../models/User'
+import Router from 'next/router'
 
 export interface PageProps {
   user?: UserType
   children?: React.ReactNode
+  isRootOrAdmin?: boolean
 }
 class MyApp extends App {
   public static async getInitialProps({ Component, ctx }: AppContext) {
@@ -26,7 +28,16 @@ class MyApp extends App {
         const payload: AxiosRequestConfig = { headers: { authorization: token } }
         const url = `${baseUrl}/api/account`
         const response = await axios.get(url, payload)
-        pageProps.user = response.data
+        const user: UserType = response.data
+        const isRoot = user.role === 'role'
+        const isAdmin = user.role === 'admin'
+
+        const isNotPermitted = !(isRoot || isAdmin) && ctx.pathname === '/create'
+        if (isNotPermitted) {
+          redirectUser(ctx, '/')
+        }
+        pageProps.user = user
+        pageProps.isRootOrAdmin = isRoot || isAdmin
       } catch (error) {
         destroyCookie(ctx, 'token')
         redirectUser(ctx, '/login')
@@ -38,6 +49,16 @@ class MyApp extends App {
     }
 
     return { pageProps }
+  }
+
+  public componentDidMount() {
+    window.addEventListener('storage', this.syncLogout)
+  }
+
+  public syncLogout = event => {
+    if (event.key === 'logout') {
+      Router.push('login')
+    }
   }
 
   public render() {

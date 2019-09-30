@@ -15,7 +15,7 @@ function ProductList(props: Props) {
         image: p.mediaUrl,
         color: 'teal',
         fluid: true,
-        chiledKey: p._id,
+        key: p._id,
         href: `/product?_id=${p._id}`,
         meta: `$${p.price}`,
       }

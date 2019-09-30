@@ -4,6 +4,7 @@ export interface UserType extends mongoose.Document {
   name: string
   email: string
   password: string
+  role: string
 }
 const UserSchema = new mongoose.Schema<UserType>(
   {

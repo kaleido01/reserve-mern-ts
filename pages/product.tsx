@@ -4,17 +4,18 @@ import { ProductType } from '../models/Product'
 import ProductSummary from '../components/Product/ProductSummary'
 import ProductAttributes from '../components/Product/ProductAttributest'
 import baseUrl from '../utils/baseUrl'
+import { PageProps } from './_app'
 
-type Props = {
+interface Props extends PageProps {
   product: ProductType
 }
 
 const Product = (props: Props) => {
-  const { product } = props
+  const { product, isRootOrAdmin } = props
   return (
     <>
       <ProductSummary product={product} />
-      <ProductAttributes product={product} />
+      <ProductAttributes product={product} isRootOrAdmin={isRootOrAdmin} />
     </>
   )
 }
