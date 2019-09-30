@@ -3,15 +3,14 @@ import Link from 'next/link'
 import Router, { useRouter } from 'next/router'
 import { Menu, Container, Image, Icon } from 'semantic-ui-react'
 import NProgress from 'nprogress'
+import { PageProps } from '../../pages/_app'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
-const Header = () => {
+const Header = ({ user }: PageProps) => {
   const router = useRouter()
-  const user = false
-
   const isActive = (route: string) => {
     return route === router.pathname
   }

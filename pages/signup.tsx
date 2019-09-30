@@ -5,8 +5,7 @@ import { useFormik } from 'formik'
 import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import catchErrors from '../utils/catchErrors'
-import handleLogin from '../utils/auth'
-
+import { handleLogin } from '../utils/auth'
 type payload = {
   name: string
   email: string

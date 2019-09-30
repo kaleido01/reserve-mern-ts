@@ -4,7 +4,7 @@ import { Input } from 'semantic-ui-react'
 type Props = {
   productId: string
 }
-const AddProductToCart = ({ productId }: Props) => {
+const AddProductToCart = () => {
   return (
     <Input
       type="number"

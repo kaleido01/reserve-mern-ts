@@ -7,7 +7,7 @@
     "dev": "next",
     "start": "next start",
     "build": "next build",
-    "lint": "eslint ./{components,models,pages} --ext .ts,.tsx"
+    "lint": "eslint ./{components,models,pages,utils} --ext .ts,.tsx"
   },
   "keywords": [],
   "author": "",
@@ -36,11 +36,12 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/d3-dsv": "^1.0.36",
     "@types/jest": "^24.0.15",
-    "@types/jsonwebtoken": "^8.3.3",
+    "@types/jsonwebtoken": "^8.3.4",
     "@types/md5": "^2.1.33",
     "@types/mongoose": "^5.5.18",
     "@types/next": "^8.0.6",
     "@types/node": "^12.7.5",
+    "@types/nookies": "^1.1.0",
     "@types/nprogress": "^0.2.0",
     "@types/prettier": "^1.16.4",
     "@types/react": "^16.9.2",
