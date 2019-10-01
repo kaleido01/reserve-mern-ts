@@ -9,12 +9,15 @@ import { Product } from '../models/Cart'
 import { PageProps } from './_app'
 import { ObjectId } from 'mongodb'
 import cookie from 'js-cookie'
+import { Token } from 'react-stripe-checkout'
 
 interface Props extends PageProps {
   products: Product[]
 }
 const Cart = ({ products, user }: Props) => {
   const [cartProducts, setCartProducts] = React.useState(products)
+  const [loading, setLoading] = React.useState(false)
+  const [success, setSuccess] = React.useState(false)
 
   const handleRemoveFromCart = async (productId: ObjectId) => {
     const url = `${baseUrl}/api/cart`
@@ -28,14 +31,30 @@ const Cart = ({ products, user }: Props) => {
     console.log(response)
     setCartProducts(response.data)
   }
+  const handleCheckout = async (paymentData: Token) => {
+    try {
+      setLoading(true)
+      const url = `${baseUrl}/api/checkout`
+      const token = cookie.get('token')
+      const payload = { paymentData }
+      const headers = { headers: { authorization: token } }
+      await axios.post(url, payload, headers)
+      setSuccess(true)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
-    <Segment>
+    <Segment loading={loading}>
       <CartItemList
         products={cartProducts}
         user={user}
         handleRemoveFromCart={handleRemoveFromCart}
+        success={success}
       />
-      <CartSummary products={cartProducts} />
+      <CartSummary products={cartProducts} handleCheckout={handleCheckout} success={success} />
     </Segment>
   )
 }

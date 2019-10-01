@@ -4,7 +4,6 @@ import connectDb from '../../utils/connectDb'
 import jwt from 'jsonwebtoken'
 import { JwtObject } from './account'
 import mongoose from 'mongoose'
-import Product from '../../models/Product'
 connectDb()
 
 const { ObjectId } = mongoose.Types

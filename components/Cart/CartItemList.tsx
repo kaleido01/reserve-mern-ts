@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Header, Icon, Button, Item } from 'semantic-ui-react'
+import { Segment, Header, Icon, Button, Item, Message } from 'semantic-ui-react'
 import { PageProps } from '../../pages/_app'
 import { Product } from '../../models/Cart'
 import { useRouter } from 'next/router'
@@ -7,8 +7,9 @@ import { ObjectId } from 'mongodb'
 interface Props extends PageProps {
   products: Product[]
   handleRemoveFromCart: (productId: ObjectId) => void
+  success: boolean
 }
-const CartItemList = ({ products, user, handleRemoveFromCart }: Props) => {
+const CartItemList = ({ products, user, handleRemoveFromCart, success }: Props) => {
   const router = useRouter()
 
   const mapCartProductsToItem = (products: Product[]) => {
@@ -34,6 +35,16 @@ const CartItemList = ({ products, user, handleRemoveFromCart }: Props) => {
         />
       ),
     }))
+  }
+  if (success) {
+    return (
+      <Message
+        success
+        header="Success"
+        contetn="your payment has been accepted"
+        icon="star outline"
+      />
+    )
   }
   if (products.length === 0) {
     return (
