@@ -2,8 +2,9 @@ import React from 'react'
 import { ProductType } from '../../models/Product'
 import { Item, Label } from 'semantic-ui-react'
 import AddProductToCart from './AddProductToCart'
+import { PageProps } from '../../pages/_app'
 
-type Props = {
+interface Props extends PageProps {
   product: ProductType
 }
 const ProductSummary = (props: Props) => {
@@ -19,7 +20,7 @@ const ProductSummary = (props: Props) => {
             <Label>SKU: {sku}</Label>
           </Item.Description>
           <Item.Extra>
-            <AddProductToCart productId={_id} />
+            <AddProductToCart productId={_id} user={props.user} />
           </Item.Extra>
         </Item.Content>
       </Item>

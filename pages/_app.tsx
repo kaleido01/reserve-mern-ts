@@ -18,6 +18,10 @@ class MyApp extends App {
     const { token } = parseCookies(ctx)
     let pageProps: PageProps = {}
 
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
+    }
+
     if (!token) {
       const isProtectedRoute = ctx.pathname === '/account' || ctx.pathname === '/create'
       if (isProtectedRoute) {
@@ -44,10 +48,6 @@ class MyApp extends App {
       }
     }
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
-    }
-
     return { pageProps }
   }
 
@@ -63,7 +63,6 @@ class MyApp extends App {
 
   public render() {
     const { Component, pageProps } = this.props
-
     return (
       <Layout {...pageProps}>
         <Component {...pageProps} />

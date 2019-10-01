@@ -11,10 +11,10 @@ interface Props extends PageProps {
 }
 
 const Product = (props: Props) => {
-  const { product, isRootOrAdmin } = props
+  const { product, isRootOrAdmin, user } = props
   return (
     <>
-      <ProductSummary product={product} />
+      <ProductSummary product={product} user={user} />
       <ProductAttributes product={product} isRootOrAdmin={isRootOrAdmin} />
     </>
   )

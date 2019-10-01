@@ -6,15 +6,36 @@ import baseUrl from '../utils/baseUrl'
 import axios, { AxiosRequestConfig } from 'axios'
 import { parseCookies } from 'nookies'
 import { Product } from '../models/Cart'
+import { PageProps } from './_app'
+import { ObjectId } from 'mongodb'
+import cookie from 'js-cookie'
 
-interface Props {
+interface Props extends PageProps {
   products: Product[]
 }
-const Cart = ({ products }: Props) => {
+const Cart = ({ products, user }: Props) => {
+  const [cartProducts, setCartProducts] = React.useState(products)
+
+  const handleRemoveFromCart = async (productId: ObjectId) => {
+    const url = `${baseUrl}/api/cart`
+    const token = cookie.get('token')
+    console.log(productId)
+    const payload = {
+      params: { productId },
+      headers: { authorization: token },
+    }
+    const response = await axios.delete<Product[]>(url, payload)
+    console.log(response)
+    setCartProducts(response.data)
+  }
   return (
     <Segment>
-      <CartItemList />
-      <CartSummary />
+      <CartItemList
+        products={cartProducts}
+        user={user}
+        handleRemoveFromCart={handleRemoveFromCart}
+      />
+      <CartSummary products={cartProducts} />
     </Segment>
   )
 }
