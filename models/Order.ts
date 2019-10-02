@@ -12,6 +12,7 @@ export interface OrderType extends mongoose.Document {
   products: Product[]
   total: number
   email: string
+  createdAt: Date
 }
 const OrderSchema = new mongoose.Schema<OrderType>(
   {

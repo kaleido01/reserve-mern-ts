@@ -5,6 +5,8 @@ export interface UserType extends mongoose.Document {
   email: string
   password: string
   role: string
+  createdAt: Date
+  updatedAt: Date
 }
 const UserSchema = new mongoose.Schema<UserType>(
   {

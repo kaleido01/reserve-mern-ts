@@ -3,6 +3,8 @@ import axios from 'axios'
 import ProductList from '../components/Index/ProductList'
 import { ProductType } from '../models/Product'
 import baseUrl from '../utils/baseUrl'
+import { NextPageContext } from 'next'
+import ProductPagination from '../components/Index/ProductPagination'
 
 type Product = {
   name: string
@@ -13,10 +15,11 @@ type Product = {
 }
 type Props = {
   products: ProductType[]
+  totalPages: string
 }
 
 function Home(props: Props) {
-  const { products } = props
+  const { products, totalPages } = props
   // React.useEffect(() => {
   //   function getProducts() {
   //     const url = 'http://localhost:3000/api/products'
@@ -25,13 +28,20 @@ function Home(props: Props) {
   //   getProducts()
   // }, [])
 
-  return <ProductList products={products} />
+  return (
+    <>
+      <ProductList products={products} />
+      <ProductPagination totalPages={totalPages} />
+    </>
+  )
 }
 
-Home.getInitialProps = async () => {
+Home.getInitialProps = async (ctx: NextPageContext) => {
+  const page = ctx.query.page || '1'
+  const size = 9
   const url = `${baseUrl}/api/products`
-  const response = await axios.get(url)
-  return { products: response.data as Product[] }
+  const payload = { params: { page, size } }
+  const response = await axios.get(url, payload)
+  return response.data
 }
-
 export default Home
