@@ -29,7 +29,7 @@ const mapOrdersToPanels = (orders: OrderType[]) => {
           </List.Header>
           <List>
             {order.products.map(product => (
-              <List.Item key={product.product._id}>
+              <List.Item key={product.product.sku}>
                 <Image avatar src={product.product.mediaUrl} />
                 <List.Content>
                   <List.Header>{product.product.name}</List.Header>

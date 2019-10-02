@@ -4,7 +4,7 @@ export interface UserType extends mongoose.Document {
   name: string
   email: string
   password: string
-  role: string
+  role: 'user' | 'admin' | 'root'
   createdAt: Date
   updatedAt: Date
 }

@@ -6,6 +6,7 @@ import { parseCookies } from 'nookies'
 import baseUrl from '../utils/baseUrl'
 import axios from 'axios'
 import { OrderType } from '../models/Order'
+import AccountPermissions from '../components/Account/AccountPermissions'
 
 interface Props extends PageProps {
   orders: OrderType[]
@@ -16,6 +17,7 @@ const Account = ({ user, orders }: Props) => {
     <>
       <AccountHeader user={user} />
       <AccountOrders orders={orders} />
+      {user.role === 'root' && <AccountPermissions />}
     </>
   )
 }
