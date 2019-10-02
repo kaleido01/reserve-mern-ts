@@ -6,7 +6,7 @@ import Header from './Header'
 import HeadContent from './HeadContent'
 import { PageProps } from '../../pages/_app'
 
-function Layout({ children, user }: PageProps) {
+function Layout({ children, user, isRootOrAdmin }: PageProps) {
   return (
     <>
       <Head>
@@ -20,7 +20,7 @@ function Layout({ children, user }: PageProps) {
         />
         <title>ReactReserve</title>
       </Head>
-      <Header user={user} />
+      <Header user={user} isRootOrAdmin={isRootOrAdmin} />
       <Container text style={{ paddingTop: '1em' }}>
         {children}
       </Container>

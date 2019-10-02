@@ -33,7 +33,7 @@ class MyApp extends App {
         const url = `${baseUrl}/api/account`
         const response = await axios.get(url, payload)
         const user: UserType = response.data
-        const isRoot = user.role === 'role'
+        const isRoot = user.role === 'root'
         const isAdmin = user.role === 'admin'
 
         const isNotPermitted = !(isRoot || isAdmin) && ctx.pathname === '/create'
